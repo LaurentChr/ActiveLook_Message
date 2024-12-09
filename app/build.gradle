@@ -1,0 +1,50 @@
+plugins {id 'com.android.application'}
+
+def apikeyPropertiesFile = rootProject.file("./.env")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
+android {
+    compileSdkVersion 35
+    namespace 'com.activelook.messages'
+
+    defaultConfig {
+        applicationId "com.activelook.messages"
+        minSdkVersion 23
+        targetSdkVersion 35
+        versionCode 8
+        versionName "1.7"
+
+        buildConfigField("String", "ACTIVELOOK_SDK_TOKEN", apikeyProperties['ACTIVELOOK_SDK_TOKEN'])
+        buildConfigField("int", "ACTIVELOOK_CFG_PASSWORD", apikeyProperties['ACTIVELOOK_CFG_PASSWORD'])
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release { minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                resValue "string", "app_version", "${defaultConfig.versionName}"
+                // rootProject.name is set in the file : settings.gradle
+                outputFileName = rootProject.name
+                outputFileName += "-v" + android.defaultConfig.versionName
+                if (variant.buildType.name == "release") {outputFileName += ".apk"}
+                else {outputFileName += "-debug.apk"}
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'com.github.activelook:android-sdk:4.5.5'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+}
