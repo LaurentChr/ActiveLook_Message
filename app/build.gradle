@@ -1,9 +1,5 @@
 plugins {id 'com.android.application'}
 
-def apikeyPropertiesFile = rootProject.file("./.env")
-def apikeyProperties = new Properties()
-apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
-
 android {
     compileSdkVersion 35
     namespace 'com.activelook.messages'
@@ -14,11 +10,6 @@ android {
         targetSdkVersion 35
         versionCode 8
         versionName "1.7"
-
-        buildConfigField("String", "ACTIVELOOK_SDK_TOKEN", apikeyProperties['ACTIVELOOK_SDK_TOKEN'])
-        buildConfigField("int", "ACTIVELOOK_CFG_PASSWORD", apikeyProperties['ACTIVELOOK_CFG_PASSWORD'])
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
